@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Digital_Signature
 {
-    class SHA_1_Hash
+    public class SHA_1_Hash
     {
         #region Fields and Consts
         private const int BYTE_COUNT = 20;
