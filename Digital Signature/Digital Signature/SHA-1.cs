@@ -28,12 +28,13 @@ namespace Digital_Signature
         #endregion
 
         #region Methods
-        #region public GetHash(string text). Return SHA-1 hash for string
-        public SHA_1_Hash GetHash(string text)
+        #region public GetHash(byte[] text). Return SHA-1 hash for array of bytes
+        public SHA_1_Hash GetHash(byte[] text)
         {
             SHA_1_Hash result = new SHA_1_Hash();
 
-            byte[] buffer = Encoding.GetEncoding("utf-8"/*1251*/).GetBytes(text);
+            //byte[] buffer = Encoding.GetEncoding("utf-8"/*1251*/).GetBytes(text);
+            byte[] buffer = text;
 
             Initialize();
 

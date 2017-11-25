@@ -56,6 +56,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="RSA.cs" />
     <Compile Include="SHA-1.cs" />
     <Compile Include="SHA-1_Hash.cs" />
     <Page Include="MainWindow.xaml">
