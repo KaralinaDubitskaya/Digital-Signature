@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
+using System.Windows;
 
 namespace Digital_Signature
 {
@@ -42,6 +44,9 @@ namespace Digital_Signature
 
             result.Value = EndHash();
 
+            System.Security.Cryptography.SHA1 sha1 = new System.Security.Cryptography.SHA1CryptoServiceProvider();
+            byte[] def = sha1.ComputeHash(text);
+            
             return result;
         }
         #endregion

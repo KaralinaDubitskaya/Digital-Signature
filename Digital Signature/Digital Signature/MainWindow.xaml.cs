@@ -25,6 +25,12 @@ namespace Digital_Signature
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        #region Consts
+        const int DIGITS_DIFFERENCE = 3; // p ~ q
+        const int MIN = 1000000; // min value of p and q
+        #endregion
+
         #region Fields
         private string _FileName; // path to file with message
         private byte[] _Message; // original message
@@ -70,24 +76,52 @@ namespace Digital_Signature
         #region btnSign_Click. A signing algorithm that, given a message and a private key, produces a signature
         private void btnSign_Click(object sender, RoutedEventArgs e)
         {
-            Digital_Signature.RSA RSA = new Digital_Signature.RSA();
-            BigInteger p, q, n, eps; // secret and public keys
+            if (_FileName == "")
+            {
+                MessageBox.Show("Error: choose file");
+            }
+            else
+            {
+                BigInteger p, q, eps; // secret key
+                if (IsSecretKeyValid(out p, out q, out eps))
+                {
+                    BigInteger r;
+                    r = p * q;
+                    Digital_Signature.RSA RSA = new Digital_Signature.RSA(p, q, eps, r);
+                    
+                    Signature Signature = new Signature();
+                    byte[] signature = Signature.Create(_Message, RSA);
 
-            if (!BigInteger.TryParse(tbP.Text, out p))
-            {
-                MessageBox.Show("Error: Invalid value of p.");
+                    tbDigitalSignature.Text = signature.ToString();
+
+                }
             }
-            else if (!BigInteger.TryParse(tbQ.Text, out p))
-            {
-                MessageBox.Show("Error: Invalid value of q.");
-            }
-            else if (!BigInteger.TryParse(tbP.Text, out eps))
-            {
-                MessageBox.Show("Error: Invalid value of e.");
-            }
-            else if (!(p.))
         }
         #endregion
+        private void btnVerify_Click(object sender, RoutedEventArgs e)
+        {
+            if (_FileName == "")
+            {
+                MessageBox.Show("Error: choose file");
+            }
+            else
+            {
+                BigInteger e, r; // public key
+                if (IsPublicKeyValid(out e, out r))
+                {
+                    Digital_Signature.RSA RSA = new Digital_Signature.RSA(e, r);
+
+                    Signature Signature = new Signature();
+                    byte[] signature = Signature.Create(_Message, RSA);
+
+                    tbDigitalSignature.Text = signature.ToString();
+
+                }
+            }
+        }
+        #region
+        #endregion
+
         #region NumberValidationTextBox. User can input only digits
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
@@ -99,14 +133,51 @@ namespace Digital_Signature
         #endregion
 
         #region Methods
-        #region 
+        #region private bool IsSecretKeyValid(out BigInteger p, out BigInteger q, out BigInteger eps). Check input
+        private bool IsSecretKeyValid(out BigInteger p, out BigInteger q, out BigInteger eps)
+        {
+
+            p = q = eps = 0;
+
+            if (!BigInteger.TryParse(tbP.Text, out p))
+            {
+                MessageBox.Show("Error: Invalid value of p.");
+            }
+            else if (!BigInteger.TryParse(tbQ.Text, out q))
+            {
+                MessageBox.Show("Error: Invalid value of q.");
+            }
+            else if (!BigInteger.TryParse(tbP.Text, out eps))
+            {
+                MessageBox.Show("Error: Invalid value of e.");
+            }
+            else if ((!(p.IsProbablyPrime())) || (!(q.IsProbablyPrime())) || (!(eps.IsProbablyPrime())))
+            {
+                MessageBox.Show("Error: Values of p and q and eps must be prime.");
+            }
+            else if (Math.Abs(p.ToString().Length - q.ToString().Length) > DIGITS_DIFFERENCE)
+            {
+                MessageBox.Show("Error: P and Q must be comparable.");
+            }
+            else if (p == q)
+            {
+                MessageBox.Show("Error: P and Q couldn't be the same.");
+            }
+            else if ((p < MIN) || (q < MIN))
+            {
+                MessageBox.Show("Error: Value of p and q must be greater then 1000000");
+            }
+            else
+            {
+                return true;
+            }
+
+            return false;
+        }
+        #endregion
+
+        #endregion
+
         
-    #endregion
-
-    #region
-
-    #endregion
-
-    #endregion
-}
+    }
 }
