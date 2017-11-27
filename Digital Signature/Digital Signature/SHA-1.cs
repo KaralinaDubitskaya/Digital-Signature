@@ -36,16 +36,14 @@ namespace Digital_Signature
             SHA_1_Hash result = new SHA_1_Hash();
 
             //byte[] buffer = Encoding.GetEncoding("utf-8"/*1251*/).GetBytes(text);
-            byte[] buffer = text;
+            byte[] buffer = new byte[text.Length];
+            Array.Copy(text, buffer, text.Length);
 
             Initialize();
 
             HashData(buffer, 0, buffer.Length);
 
             result.Value = EndHash();
-
-            System.Security.Cryptography.SHA1 sha1 = new System.Security.Cryptography.SHA1CryptoServiceProvider();
-            byte[] def = sha1.ComputeHash(text);
             
             return result;
         }

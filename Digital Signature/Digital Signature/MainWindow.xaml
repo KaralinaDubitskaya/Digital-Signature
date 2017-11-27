@@ -14,12 +14,12 @@
         </Grid.ColumnDefinitions>
         <TextBox x:Name="tbMessage" HorizontalAlignment="Left" Height="626" Margin="10,34,-224.2,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="479" Background="White" Grid.ColumnSpan="2"/>
         <Label x:Name="lblMessage" Content="Message:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.771,-0.422" Height="26" Width="59"/>
-        <TextBox x:Name="tbP" HorizontalAlignment="Left" Height="21" Margin="256.6,165,-582.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="326" Grid.Column="1" PreviewTextInput="NumberValidationTextBox"/>
-        <TextBox x:Name="tbQ" HorizontalAlignment="Left" Height="21" Margin="256.6,215,-582.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="326" Grid.Column="1" PreviewTextInput="NumberValidationTextBox"/>
-        <TextBox x:Name="tbN" HorizontalAlignment="Left" Height="21" Margin="256.6,267,-582.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="326" Grid.Column="1" PreviewTextInput="NumberValidationTextBox"/>
-        <TextBox x:Name="tbE" HorizontalAlignment="Left" Height="23" Margin="256.6,312,-582.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="326" Grid.Column="1" PreviewTextInput="NumberValidationTextBox"/>
-        <TextBox x:Name="tbHashHex" HorizontalAlignment="Left" Height="21" Margin="256.6,389,-582.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="326" Grid.Column="1" IsReadOnly="True"/>
-        <TextBox x:Name="tbHashDecimal" HorizontalAlignment="Left" Height="20" Margin="256.6,438,-582.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="326" Grid.Column="1" IsReadOnly="True"/>
+        <TextBox x:Name="tbP" Text="35742549198872617291353508656626642567" HorizontalAlignment="Left" Height="21" Margin="256.6,165,-582.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="326" Grid.Column="1" PreviewTextInput="NumberValidationTextBox"/>
+        <TextBox x:Name="tbQ" Text="359334085968622831041960188598043661065388726959079837" HorizontalAlignment="Left" Height="21" Margin="256.6,215,-582.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="326" Grid.Column="1" PreviewTextInput="NumberValidationTextBox"/>
+        <TextBox x:Name="tbE" Text="27644437" HorizontalAlignment="Left" Height="21" Margin="256.6,267,-582.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="326" Grid.Column="1" PreviewTextInput="NumberValidationTextBox"/>
+        <TextBox x:Name="tbD" HorizontalAlignment="Left" Height="23" Margin="256.6,312,-582.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="326" Grid.Column="1" PreviewTextInput="NumberValidationTextBox"/>
+        <TextBox x:Name="tbHashHex" HorizontalAlignment="Left" Height="21" Margin="256.6,409,-582.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="326" Grid.Column="1" IsReadOnly="True"/>
+        <TextBox x:Name="tbHashDecimal" HorizontalAlignment="Left" Height="20" Margin="256.6,458,-582.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="326" Grid.Column="1" IsReadOnly="True"/>
         <Button x:Name="btnFile" Content="Browse..." HorizontalAlignment="Left" Margin="256.6,101,-331.6,0" VerticalAlignment="Top" Width="75" Grid.Column="1" Height="19" Background="Bisque" Click="btnFile_Click"/>
         <Button x:Name="btnSign" Content="Sign" HorizontalAlignment="Left" Margin="273.6,587,-380.6,0" VerticalAlignment="Top" Width="107" Grid.Column="1" Height="19" Background="Bisque" Click="btnSign_Click"/>
         <Button x:Name="btnVerify" Content="Verify" HorizontalAlignment="Left" Margin="446.6,587,-551.6,0" VerticalAlignment="Top" Width="105" Grid.Column="1" Height="19" Background="Bisque" Click="btnVerify_Click"/>
@@ -28,11 +28,13 @@
         <Label x:Name="lblP" Content="P (private key)" Grid.Column="1" HorizontalAlignment="Left" Margin="256.6,143,-356.6,0" VerticalAlignment="Top" Width="100"/>
         <Label x:Name="lblQ" Content="Q (private key)" Grid.Column="1" HorizontalAlignment="Left" Margin="254.6,191,-354.6,0" VerticalAlignment="Top" Width="100"/>
         <Label x:Name="lblE" Content="E (public key)" Grid.Column="1" HorizontalAlignment="Left" Margin="256.6,241,-356.6,0" VerticalAlignment="Top" Width="100"/>
-        <Label x:Name="lblR" Content="R (public key)" Grid.Column="1" HorizontalAlignment="Left" Margin="256.6,291,-356.6,0" VerticalAlignment="Top" Width="100"/>
-        <Label x:Name="lblHashHex" Content="Hash (hexadecimal)" Grid.Column="1" HorizontalAlignment="Left" Margin="256.6,363,-380.6,0" VerticalAlignment="Top" Width="124"/>
-        <Label x:Name="lblHashDecimal" Content="Hash (decimal)" Grid.Column="1" HorizontalAlignment="Left" Margin="256.6,415,-356.6,0" VerticalAlignment="Top" Width="100"/>
+        <Label x:Name="lblD" Content="D (private key)" Grid.Column="1" HorizontalAlignment="Left" Margin="256.6,291,-356.6,0" VerticalAlignment="Top" Width="100"/>
+        <Label x:Name="lblHashHex" Content="Hash (hexadecimal)" Grid.Column="1" HorizontalAlignment="Left" Margin="256.6,383,-380.6,0" VerticalAlignment="Top" Width="124"/>
+        <Label x:Name="lblHashDecimal" Content="Hash (decimal)" Grid.Column="1" HorizontalAlignment="Left" Margin="256.6,435,-356.6,0" VerticalAlignment="Top" Width="100"/>
         <TextBox x:Name="tbDigitalSignature" Grid.Column="1" HorizontalAlignment="Left" Height="17" Margin="256.6,516,-582.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="326" IsReadOnly="True"/>
         <Label x:Name="lblDigitalSignature" Content="Digital signature" Grid.Column="1" HorizontalAlignment="Left" Margin="256.6,490,-356.6,0" VerticalAlignment="Top" Width="100"/>
+        <TextBox x:Name="tbR" HorizontalAlignment="Left" Height="23" Margin="256.6,361,-582.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="326" Grid.Column="1" PreviewTextInput="NumberValidationTextBox"/>
+        <Label x:Name="lblR" Content="R:" Grid.Column="1" HorizontalAlignment="Left" Margin="256.6,340,-356.6,0" VerticalAlignment="Top" Width="100"/>
 
     </Grid>
 </Window>

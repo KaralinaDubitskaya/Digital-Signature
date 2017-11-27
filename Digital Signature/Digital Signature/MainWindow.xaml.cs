@@ -17,6 +17,7 @@ using System.Windows.Shapes;
 using System.Text.RegularExpressions;
 using System.Numerics;
 using System.Threading;
+using System.Security.Cryptography;
 
 namespace Digital_Signature
 {
@@ -27,7 +28,7 @@ namespace Digital_Signature
     {
 
         #region Consts
-        const int DIGITS_DIFFERENCE = 3; // p ~ q
+        const int DIGITS_DIFFERENCE = 30; // p ~ q
         const int MIN = 1000000; // min value of p and q
         #endregion
 
@@ -37,7 +38,8 @@ namespace Digital_Signature
         #endregion
 
         #region Properties
-        // public string FileName { get; set; } 
+        public string FileName { get; set; }
+        public byte[] Message { get; set; }
         #endregion
 
         #region Constructor
@@ -55,6 +57,7 @@ namespace Digital_Signature
             dlg.ShowDialog();
 
             _FileName = dlg.FileName;
+            
 
             if (_FileName == "")
                 System.Windows.MessageBox.Show("Error: couldn't load file.");
@@ -67,7 +70,12 @@ namespace Digital_Signature
                     lblFileName.Content = _FileName;
 
                 //load file as an array of bytes
+                byte[] _Message = new byte[File.ReadAllBytes(_FileName).Length];
                 _Message = File.ReadAllBytes(_FileName);
+
+                this.Message = new byte[_Message.Length];
+                this.Message = _Message;
+                                
                 //tbSource.Text = BitConverter.ToString(arr);
                 tbMessage.Text = string.Join(" ", _Message.Select(b => b.ToString()));
             }
@@ -87,13 +95,28 @@ namespace Digital_Signature
                 {
                     BigInteger r;
                     r = p * q;
+                    tbR.Text = r.ToString();
                     Digital_Signature.RSA RSA = new Digital_Signature.RSA(p, q, eps, r);
                     
                     Signature Signature = new Signature();
-                    byte[] signature = Signature.Create(_Message, RSA);
 
-                    tbDigitalSignature.Text = signature.ToString();
+                    byte[] signature = new byte[20];
+                    //signature = Signature.Create(Message, RSA);
 
+                    SHA_1 SHA1 = new SHA_1();
+
+                    byte[] SHAHash = new byte[20];
+                    SHAHash = SHA1.GetHash(Message).Value;
+
+                    BigInteger BI_Hash = new BigInteger(SHAHash);
+
+                    tbHashDecimal.Text = SHAHash.ToString();
+
+                    //byte[] signature = RSA.EncryptHash(BI_Hash).ToByteArray();
+
+                    tbDigitalSignature.Text = BitConverter.ToString(signature);
+
+                    File.WriteAllBytes(@"C:\Users\Ирина\Desktop\Foo.txt", signature);
                 }
             }
         }
@@ -106,15 +129,33 @@ namespace Digital_Signature
             }
             else
             {
-                BigInteger e, r; // public key
-                if (IsPublicKeyValid(out e, out r))
+                BigInteger eps, r; // public key
+                if (IsPublicKeyValid(out eps, out r))
                 {
-                    Digital_Signature.RSA RSA = new Digital_Signature.RSA(e, r);
+                    Digital_Signature.RSA RSA = new Digital_Signature.RSA(eps, r);
 
                     Signature Signature = new Signature();
-                    byte[] signature = Signature.Create(_Message, RSA);
+                    SHA_1 SHA1 = new SHA_1();
+                    byte[] hash = new byte[20];
+                    hash = SHA1.GetHash(Message).Value;
 
-                    tbDigitalSignature.Text = signature.ToString();
+                    byte[] cryptedHash = new byte[File.ReadAllBytes(@"C:\Users\Ирина\Desktop\Foo.txt").Length];
+                    cryptedHash = File.ReadAllBytes(@"C:\Users\Ирина\Desktop\Foo.txt");
+
+                    RSA Rsa = new RSA(eps, r);
+                    BigInteger BI_Hash = new BigInteger(cryptedHash);
+
+                    byte[] checkedHash = new byte[20];
+                    checkedHash = RSA.DecryptHash(BI_Hash).ToByteArray();
+
+                    if (Equals(checkedHash, hash))
+                    {
+                        MessageBox.Show("urraaaa");
+                    }
+                    else
+                    {
+                        MessageBox.Show("plak");
+                    }
 
                 }
             }
@@ -167,6 +208,40 @@ namespace Digital_Signature
             {
                 MessageBox.Show("Error: Value of p and q must be greater then 1000000");
             }
+            else if (eps >= p * q)
+            {
+                MessageBox.Show("Error: Eps must be less than P * Q.");
+            }
+            else
+            {
+                return true;
+            }
+
+            return false;
+        }
+        #endregion
+        #region private bool IsPublicKeyValid(out BigInteger eps, out BigInteger r). Check input
+        private bool IsPublicKeyValid(out BigInteger eps, out BigInteger r)
+        {
+
+            r = eps = 0;
+
+            if (!BigInteger.TryParse(tbR.Text, out r))
+            {
+                MessageBox.Show("Error: Invalid value of r.");
+            }
+            else if (!BigInteger.TryParse(tbP.Text, out eps))
+            {
+                MessageBox.Show("Error: Invalid value of e.");
+            }
+            else if (eps >= r)
+            {
+                MessageBox.Show("Error: Eps must be less than R.");
+            }
+            else if (r < 1000000000000) 
+            {
+                MessageBox.Show("Error: Value of r must be greater then 1000000000000");
+            }
             else
             {
                 return true;
@@ -178,6 +253,6 @@ namespace Digital_Signature
 
         #endregion
 
-        
+
     }
 }

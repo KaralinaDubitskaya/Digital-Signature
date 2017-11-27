@@ -23,9 +23,12 @@ namespace Digital_Signature
         {
             SHA_1 SHA1 = new SHA_1();
 
-            byte[] hash = SHA1.GetHash(text).Value;
+            byte[] SHAHash = new byte[20];
+            SHAHash = SHA1.GetHash(text).Value;
 
-            BigInteger BI_Hash = new BigInteger(hash);
+            BigInteger BI_Hash = new BigInteger(SHAHash);
+
+            
 
             byte[] signature = RSA.EncryptHash(BI_Hash).ToByteArray();
 
