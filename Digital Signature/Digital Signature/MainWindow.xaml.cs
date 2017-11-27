@@ -28,18 +28,14 @@ namespace Digital_Signature
     {
 
         #region Consts
-        const int DIGITS_DIFFERENCE = 30; // p ~ q
-        const int MIN = 1000000; // min value of p and q
-        #endregion
-
-        #region Fields
-        private string _FileName; // path to file with message
-        private byte[] _Message; // original message
+        const int DIGITS_DIFFERENCE = 3; // p ~ q
+        BigInteger MIN = new BigInteger(10000000000) * new BigInteger(10000000000); // min value of p * q
         #endregion
 
         #region Properties
         public string FileName { get; set; }
         public byte[] Message { get; set; }
+        public string Signature { get; set; }
         #endregion
 
         #region Constructor
@@ -50,28 +46,29 @@ namespace Digital_Signature
         #endregion
 
         #region Event Handlers
-        #region btnFile_Click. Open OpenFileDialog, set file location and load file in the array of bytes
+        #region btnFile_Click. Open OpenFileDialog, set file location and load file in the array of bytes.
         private void btnFile_Click(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.ShowDialog();
 
-            _FileName = dlg.FileName;
+            FileName = dlg.FileName;
+            FileName = FileName;
             
 
-            if (_FileName == "")
+            if (FileName == "")
                 System.Windows.MessageBox.Show("Error: couldn't load file.");
             else
             {
                 //cut file name
-                if (_FileName.Length > (int)lblFileName.Width - 20)
-                    lblFileName.Content = "..." + _FileName.Substring(_FileName.Length - (int) lblFileName.Width - 20);
+                if (FileName.Length > (int)lblFileName.Width - 20)
+                    lblFileName.Content = "..." + FileName.Substring(FileName.Length - (int) lblFileName.Width - 20);
                 else
-                    lblFileName.Content = _FileName;
+                    lblFileName.Content = FileName;
 
                 //load file as an array of bytes
-                byte[] _Message = new byte[File.ReadAllBytes(_FileName).Length];
-                _Message = File.ReadAllBytes(_FileName);
+                byte[] _Message = new byte[File.ReadAllBytes(FileName).Length];
+                _Message = File.ReadAllBytes(FileName);
 
                 this.Message = new byte[_Message.Length];
                 this.Message = _Message;
@@ -81,107 +78,154 @@ namespace Digital_Signature
             }
         }
         #endregion 
-        #region btnSign_Click. A signing algorithm that, given a message and a private key, produces a signature
+        #region private void btnSignFile_Click(object sender, RoutedEventArgs e). Load digital signature from file.
+        private void btnSignFile_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.ShowDialog();
+
+            Signature = dlg.FileName;
+
+
+            if (Signature == "")
+                System.Windows.MessageBox.Show("Error: couldn't load file.");
+            else
+            {
+                //cut file name
+                if (Signature.Length > (int)lblSignFileName.Width - 20)
+                    lblSignFileName.Content = "..." + Signature.Substring(Signature.Length - (int)lblSignFileName.Width - 20);
+                else
+                    lblSignFileName.Content = Signature;
+
+                //load file as a string
+                Signature = File.ReadAllText(Signature);
+
+                tbDigitalSignature.Text = Signature;
+            }
+        }
+        #endregion
+
+        #region btnSign_Click. A signing algorithm that, given a message and a private key, produces a signature.
         private void btnSign_Click(object sender, RoutedEventArgs e)
         {
-            if (_FileName == "")
+            if ((FileName == null) || (FileName == ""))
             {
                 MessageBox.Show("Error: choose file");
             }
             else
             {
-                BigInteger p, q, eps; // secret key
-                if (IsSecretKeyValid(out p, out q, out eps))
+                BigInteger p, q, eps, d; // secret key
+                if (IsSecretKeyValid(out p, out q, out eps, out d))
                 {
+                    // modulo
                     BigInteger r;
                     r = p * q;
                     tbR.Text = r.ToString();
-                    Digital_Signature.RSA RSA = new Digital_Signature.RSA(p, q, eps, r);
-                    
-                    Signature Signature = new Signature();
 
-                    //byte[] signature = new byte[20];
-                    //signature = Signature.Create(Message, RSA);
-
+                    RSA RSA = new RSA(p, q, eps, d, r);
                     SHA_1 SHA1 = new SHA_1();
 
                     byte[] SHAHash = new byte[20];
                     SHAHash = SHA1.GetHash(Message).Value;
 
+                    // BigInteger values are represented in little endian
                     Array.Reverse(SHAHash);
 
+                    // sure that a positive value is not incorrectly instantiated as a negative value 
+                    // by adding a byte whose value is zero to the end of the array
                     byte[] temp = new byte[SHAHash.Length];
                     Array.Copy(SHAHash, temp, SHAHash.Length);
                     SHAHash = new byte[temp.Length + 1];
                     Array.Copy(temp, SHAHash, temp.Length);
 
+                    // convert hash array to BigInteger
                     BigInteger BI_Hash = new BigInteger(SHAHash);
+                    
+                    // decimal representation of hash
+                    tbHashDecimal.Text = BI_Hash.ToString();
 
+                    //hexadecimal representation of hash
+                    string hexHash = BI_Hash.ToString("X");
+                    if (hexHash[0] == '0')
+                    {
+                        hexHash = hexHash.Substring(1);
+                    }
+                    tbHashHex.Text = hexHash;
 
-                    tbHashDecimal.Text = BitConverter.ToString(SHAHash);
-
+                    // encrypt hash
                     string signature = RSA.EncryptHash(BI_Hash).ToString();
+                    
+                    tbD.Text = RSA.D.ToString();
+                    tbE.Text = RSA.E.ToString();
 
                     tbDigitalSignature.Text = signature;
 
-                    File.WriteAllText(@"C:\Users\Ирина\Desktop\Foo.txt", signature);
+                    // save signature to file 
+                    File.WriteAllText(FileName.Substring(0, FileName.IndexOf('.')) + "_Sign.txt", signature);
                 }
             }
         }
         #endregion
         private void btnVerify_Click(object sender, RoutedEventArgs e)
         {
-            if (_FileName == "")
+            if ((FileName == null) || (FileName == ""))
             {
-                MessageBox.Show("Error: choose file");
+                MessageBox.Show("Error: Choose file.");
+            } 
+            else if ((Signature == null) || (Signature == ""))
+            {
+                MessageBox.Show("Error: Choose file with signature.");
             }
             else
             {
                 BigInteger eps, r; // public key
                 if (IsPublicKeyValid(out eps, out r))
                 {
-                    Digital_Signature.RSA RSA = new Digital_Signature.RSA(eps, r);
-
-                    Signature Signature = new Signature();
+                    RSA RSA = new RSA(eps, r);
                     SHA_1 SHA1 = new SHA_1();
+
                     byte[] realHash = new byte[20];
                     realHash = SHA1.GetHash(Message).Value;
 
+                    // BigInteger values are represented in little endian
                     Array.Reverse(realHash);
 
+                    // sure that a positive value is not incorrectly instantiated as a negative value 
+                    // by adding a byte whose value is zero to the end of the array
                     byte[] temp = new byte[realHash.Length];
                     Array.Copy(realHash, temp, realHash.Length);
                     realHash = new byte[temp.Length + 1];
                     Array.Copy(temp, realHash, temp.Length);
 
+                    // decimal representation of hash
+                    tbHashDecimal.Text = new BigInteger(realHash).ToString();
 
-                    string cryptedHash = File.ReadAllText(@"C:\Users\Ирина\Desktop\Foo.txt");
-                    //cryptedHash = File.ReadAllBytes(@"C:\Users\Ирина\Desktop\Foo.txt");
+                    //hexadecimal representation of hash
+                    string hexHash = new BigInteger(realHash).ToString("X");
+                    if (hexHash[0] == '0')
+                    {
+                        hexHash = hexHash.Substring(1);
+                    }
+                    tbHashHex.Text = hexHash;
 
-                    /*RSA Rsa = new RSA(eps, r);
-                    Array.Reverse(cryptedHash);
-           
-                    byte[] temp = new byte[cryptedHash.Length];
-                    Array.Copy(cryptedHash, temp, cryptedHash.Length);
-                    cryptedHash = new byte[temp.Length + 1];
-                    Array.Copy(temp, cryptedHash, temp.Length);
+                    // convert signature to BigInteger
+                    BigInteger BI_Hash = BigInteger.Parse(Signature);
 
-                    BigInteger BI_Hash = new BigInteger(cryptedHash);*/
-
-                    BigInteger BI_Hash = BigInteger.Parse(cryptedHash);
-
+                    //encrypt hash from file using public key
                     byte[] checkedHash = new byte[20];
                     RSA Rsa = new RSA(eps, r);
                     checkedHash = Rsa.DecryptHash(BI_Hash).ToByteArray();
 
-                    //if (Equals(checkedHash, realHash))
+                    // output encrypted hash from file
+                    tbCheckedHash.Text = new BigInteger(checkedHash).ToString();
+
                     if (checkedHash.SequenceEqual(realHash))
                     {
-                        MessageBox.Show("urraaaa");
+                        MessageBox.Show("Digital signature is correct. File is authentic.");
                     }
                     else
                     {
-                        MessageBox.Show("plak");
+                        MessageBox.Show("Digital signature isn't correct!");
                     }
 
                 }
@@ -201,27 +245,26 @@ namespace Digital_Signature
         #endregion
 
         #region Methods
-        #region private bool IsSecretKeyValid(out BigInteger p, out BigInteger q, out BigInteger eps). Check input
-        private bool IsSecretKeyValid(out BigInteger p, out BigInteger q, out BigInteger eps)
+        #region private bool IsSecretKeyValid(out BigInteger p, out BigInteger q, out BigInteger eps). Check input.
+        private bool IsSecretKeyValid(out BigInteger p, out BigInteger q, out BigInteger eps, out BigInteger d)
         {
+            // initialization
+            p = q = eps = d = 0;
 
-            p = q = eps = 0;
+            BigInteger.TryParse(tbE.Text, out eps);
+            BigInteger.TryParse(tbD.Text, out d);
 
             if (!BigInteger.TryParse(tbP.Text, out p))
             {
-                MessageBox.Show("Error: Invalid value of p.");
+                MessageBox.Show("Error: Invalid value of P.");
             }
             else if (!BigInteger.TryParse(tbQ.Text, out q))
             {
-                MessageBox.Show("Error: Invalid value of q.");
+                MessageBox.Show("Error: Invalid value of Q.");
             }
-            else if (!BigInteger.TryParse(tbE.Text, out eps))
+            else if ((!(p.IsProbablyPrime())) || (!(q.IsProbablyPrime())))
             {
-                MessageBox.Show("Error: Invalid value of e.");
-            }
-            else if ((!(p.IsProbablyPrime())) || (!(q.IsProbablyPrime())))// || (!(eps.IsProbablyPrime())))
-            {
-                MessageBox.Show("Error: Values of p and q and eps must be prime.");
+                MessageBox.Show("Error: Values of P and Q must be prime.");
             }
             else if (Math.Abs(p.ToString().Length - q.ToString().Length) > DIGITS_DIFFERENCE)
             {
@@ -231,13 +274,21 @@ namespace Digital_Signature
             {
                 MessageBox.Show("Error: P and Q couldn't be the same.");
             }
-            else if ((p < MIN) || (q < MIN))
+            else if (p * q < MIN)
             {
-                MessageBox.Show("Error: Value of p and q must be greater then 1000000");
+                MessageBox.Show("Error: Value of p and q must be greater than 100000000000000000000");
             }
             else if (eps >= p * q)
             {
                 MessageBox.Show("Error: Eps must be less than P * Q.");
+            }
+            else if (d >= p * q)
+            {
+                MessageBox.Show("Error: D must be less than P * Q.");
+            }
+            else if ((eps == 0) && (d == 0))
+            {
+                MessageBox.Show("Error: Enter value of E or D.");
             }
             else
             {
@@ -255,19 +306,19 @@ namespace Digital_Signature
 
             if (!BigInteger.TryParse(tbR.Text, out r))
             {
-                MessageBox.Show("Error: Invalid value of r.");
+                MessageBox.Show("Error: Invalid value of R.");
             }
             else if (!BigInteger.TryParse(tbE.Text, out eps))
             {
-                MessageBox.Show("Error: Invalid value of e.");
+                MessageBox.Show("Error: Invalid value of E.");
             }
             else if (eps >= r)
             {
-                MessageBox.Show("Error: Eps must be less than R.");
+                MessageBox.Show("Error: E must be less than R.");
             }
             else if (r < 1000000000000) 
             {
-                MessageBox.Show("Error: Value of r must be greater then 1000000000000");
+                MessageBox.Show("Error: Value of r must be greater than 100000000000000000000");
             }
             else
             {
@@ -276,10 +327,9 @@ namespace Digital_Signature
 
             return false;
         }
-        #endregion
 
         #endregion
 
-
+        #endregion
     }
 }

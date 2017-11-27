@@ -8,9 +8,8 @@ namespace Digital_Signature
 {
     public class SHA_1_Hash
     {
-        #region Fields and Consts
+        #region Consts
         private const int BYTE_COUNT = 20;
-        private byte[] _Value = null;
         #endregion
 
         #region Properties
