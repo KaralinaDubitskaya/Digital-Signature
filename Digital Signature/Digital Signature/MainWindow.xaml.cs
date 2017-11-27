@@ -100,7 +100,7 @@ namespace Digital_Signature
                     
                     Signature Signature = new Signature();
 
-                    byte[] signature = new byte[20];
+                    //byte[] signature = new byte[20];
                     //signature = Signature.Create(Message, RSA);
 
                     SHA_1 SHA1 = new SHA_1();
@@ -108,15 +108,23 @@ namespace Digital_Signature
                     byte[] SHAHash = new byte[20];
                     SHAHash = SHA1.GetHash(Message).Value;
 
+                    Array.Reverse(SHAHash);
+
+                    byte[] temp = new byte[SHAHash.Length];
+                    Array.Copy(SHAHash, temp, SHAHash.Length);
+                    SHAHash = new byte[temp.Length + 1];
+                    Array.Copy(temp, SHAHash, temp.Length);
+
                     BigInteger BI_Hash = new BigInteger(SHAHash);
 
-                    tbHashDecimal.Text = SHAHash.ToString();
 
-                    //byte[] signature = RSA.EncryptHash(BI_Hash).ToByteArray();
+                    tbHashDecimal.Text = BitConverter.ToString(SHAHash);
 
-                    tbDigitalSignature.Text = BitConverter.ToString(signature);
+                    string signature = RSA.EncryptHash(BI_Hash).ToString();
 
-                    File.WriteAllBytes(@"C:\Users\Ирина\Desktop\Foo.txt", signature);
+                    tbDigitalSignature.Text = signature;
+
+                    File.WriteAllText(@"C:\Users\Ирина\Desktop\Foo.txt", signature);
                 }
             }
         }
@@ -136,19 +144,38 @@ namespace Digital_Signature
 
                     Signature Signature = new Signature();
                     SHA_1 SHA1 = new SHA_1();
-                    byte[] hash = new byte[20];
-                    hash = SHA1.GetHash(Message).Value;
+                    byte[] realHash = new byte[20];
+                    realHash = SHA1.GetHash(Message).Value;
 
-                    byte[] cryptedHash = new byte[File.ReadAllBytes(@"C:\Users\Ирина\Desktop\Foo.txt").Length];
-                    cryptedHash = File.ReadAllBytes(@"C:\Users\Ирина\Desktop\Foo.txt");
+                    Array.Reverse(realHash);
 
-                    RSA Rsa = new RSA(eps, r);
-                    BigInteger BI_Hash = new BigInteger(cryptedHash);
+                    byte[] temp = new byte[realHash.Length];
+                    Array.Copy(realHash, temp, realHash.Length);
+                    realHash = new byte[temp.Length + 1];
+                    Array.Copy(temp, realHash, temp.Length);
+
+
+                    string cryptedHash = File.ReadAllText(@"C:\Users\Ирина\Desktop\Foo.txt");
+                    //cryptedHash = File.ReadAllBytes(@"C:\Users\Ирина\Desktop\Foo.txt");
+
+                    /*RSA Rsa = new RSA(eps, r);
+                    Array.Reverse(cryptedHash);
+           
+                    byte[] temp = new byte[cryptedHash.Length];
+                    Array.Copy(cryptedHash, temp, cryptedHash.Length);
+                    cryptedHash = new byte[temp.Length + 1];
+                    Array.Copy(temp, cryptedHash, temp.Length);
+
+                    BigInteger BI_Hash = new BigInteger(cryptedHash);*/
+
+                    BigInteger BI_Hash = BigInteger.Parse(cryptedHash);
 
                     byte[] checkedHash = new byte[20];
-                    checkedHash = RSA.DecryptHash(BI_Hash).ToByteArray();
+                    RSA Rsa = new RSA(eps, r);
+                    checkedHash = Rsa.DecryptHash(BI_Hash).ToByteArray();
 
-                    if (Equals(checkedHash, hash))
+                    //if (Equals(checkedHash, realHash))
+                    if (checkedHash.SequenceEqual(realHash))
                     {
                         MessageBox.Show("urraaaa");
                     }
@@ -188,11 +215,11 @@ namespace Digital_Signature
             {
                 MessageBox.Show("Error: Invalid value of q.");
             }
-            else if (!BigInteger.TryParse(tbP.Text, out eps))
+            else if (!BigInteger.TryParse(tbE.Text, out eps))
             {
                 MessageBox.Show("Error: Invalid value of e.");
             }
-            else if ((!(p.IsProbablyPrime())) || (!(q.IsProbablyPrime())) || (!(eps.IsProbablyPrime())))
+            else if ((!(p.IsProbablyPrime())) || (!(q.IsProbablyPrime())))// || (!(eps.IsProbablyPrime())))
             {
                 MessageBox.Show("Error: Values of p and q and eps must be prime.");
             }
@@ -230,7 +257,7 @@ namespace Digital_Signature
             {
                 MessageBox.Show("Error: Invalid value of r.");
             }
-            else if (!BigInteger.TryParse(tbP.Text, out eps))
+            else if (!BigInteger.TryParse(tbE.Text, out eps))
             {
                 MessageBox.Show("Error: Invalid value of e.");
             }

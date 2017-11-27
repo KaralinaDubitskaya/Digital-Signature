@@ -14,10 +14,10 @@
         </Grid.ColumnDefinitions>
         <TextBox x:Name="tbMessage" HorizontalAlignment="Left" Height="626" Margin="10,34,-224.2,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="479" Background="White" Grid.ColumnSpan="2"/>
         <Label x:Name="lblMessage" Content="Message:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.771,-0.422" Height="26" Width="59"/>
-        <TextBox x:Name="tbP" Text="35742549198872617291353508656626642567" HorizontalAlignment="Left" Height="21" Margin="256.6,165,-582.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="326" Grid.Column="1" PreviewTextInput="NumberValidationTextBox"/>
-        <TextBox x:Name="tbQ" Text="359334085968622831041960188598043661065388726959079837" HorizontalAlignment="Left" Height="21" Margin="256.6,215,-582.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="326" Grid.Column="1" PreviewTextInput="NumberValidationTextBox"/>
-        <TextBox x:Name="tbE" Text="27644437" HorizontalAlignment="Left" Height="21" Margin="256.6,267,-582.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="326" Grid.Column="1" PreviewTextInput="NumberValidationTextBox"/>
-        <TextBox x:Name="tbD" HorizontalAlignment="Left" Height="23" Margin="256.6,312,-582.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="326" Grid.Column="1" PreviewTextInput="NumberValidationTextBox"/>
+        <TextBox x:Name="tbP" Text="37975227936943673922808872755445627854565536638199" HorizontalAlignment="Left" Height="21" Margin="256.6,165,-582.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="326" Grid.Column="1" PreviewTextInput="NumberValidationTextBox"/>
+        <TextBox x:Name="tbQ" Text="40094690950920881030683735292761468389214899724061" HorizontalAlignment="Left" Height="21" Margin="256.6,215,-582.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="326" Grid.Column="1" PreviewTextInput="NumberValidationTextBox"/>
+        <TextBox x:Name="tbE" Text="1074839275417362286266294945066175413502599191970697912136642416299606897244138474909114297362072127" HorizontalAlignment="Left" Height="21" Margin="256.6,267,-582.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="326" Grid.Column="1" PreviewTextInput="NumberValidationTextBox"/>
+        <TextBox x:Name="tbD" Text="3023" HorizontalAlignment="Left" Height="23" Margin="256.6,312,-582.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="326" Grid.Column="1" PreviewTextInput="NumberValidationTextBox"/>
         <TextBox x:Name="tbHashHex" HorizontalAlignment="Left" Height="21" Margin="256.6,409,-582.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="326" Grid.Column="1" IsReadOnly="True"/>
         <TextBox x:Name="tbHashDecimal" HorizontalAlignment="Left" Height="20" Margin="256.6,458,-582.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="326" Grid.Column="1" IsReadOnly="True"/>
         <Button x:Name="btnFile" Content="Browse..." HorizontalAlignment="Left" Margin="256.6,101,-331.6,0" VerticalAlignment="Top" Width="75" Grid.Column="1" Height="19" Background="Bisque" Click="btnFile_Click"/>
@@ -33,7 +33,7 @@
         <Label x:Name="lblHashDecimal" Content="Hash (decimal)" Grid.Column="1" HorizontalAlignment="Left" Margin="256.6,435,-356.6,0" VerticalAlignment="Top" Width="100"/>
         <TextBox x:Name="tbDigitalSignature" Grid.Column="1" HorizontalAlignment="Left" Height="17" Margin="256.6,516,-582.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="326" IsReadOnly="True"/>
         <Label x:Name="lblDigitalSignature" Content="Digital signature" Grid.Column="1" HorizontalAlignment="Left" Margin="256.6,490,-356.6,0" VerticalAlignment="Top" Width="100"/>
-        <TextBox x:Name="tbR" HorizontalAlignment="Left" Height="23" Margin="256.6,361,-582.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="326" Grid.Column="1" PreviewTextInput="NumberValidationTextBox"/>
+        <TextBox x:Name="tbR" Text="1522605027922533360535618378132637429718068114961380688657908494580122963258952897654000350692006139" HorizontalAlignment="Left" Height="23" Margin="256.6,361,-582.6,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="326" Grid.Column="1" PreviewTextInput="NumberValidationTextBox"/>
         <Label x:Name="lblR" Content="R:" Grid.Column="1" HorizontalAlignment="Left" Margin="256.6,340,-356.6,0" VerticalAlignment="Top" Width="100"/>
 
     </Grid>

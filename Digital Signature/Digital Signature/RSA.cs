@@ -68,6 +68,7 @@ namespace Digital_Signature
             {
                 D += EulersFuncOfR;
             }
+            D = 3023;
 
             return ModPower(hash, D, R); // c = (m^d) mod r
         }
