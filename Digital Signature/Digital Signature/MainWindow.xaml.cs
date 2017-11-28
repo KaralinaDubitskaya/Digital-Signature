@@ -28,7 +28,7 @@ namespace Digital_Signature
     {
 
         #region Consts
-        const int DIGITS_DIFFERENCE = 3; // p ~ q
+        const int DIGITS_DIFFERENCE = 20; // p ~ q
         BigInteger MIN = new BigInteger(10000000000) * new BigInteger(10000000000); // min value of p * q
         #endregion
 
@@ -112,6 +112,11 @@ namespace Digital_Signature
             {
                 MessageBox.Show("Error: choose file");
             }
+            else if ((Message == null) || (Message.Length == 0))
+            {
+                MessageBox.Show("Error: empty file");
+                return;
+            }
             else
             {
                 BigInteger p, q, eps, d; // secret key
@@ -140,6 +145,12 @@ namespace Digital_Signature
 
                     // convert hash array to BigInteger
                     BigInteger BI_Hash = new BigInteger(SHAHash);
+
+                    if (BI_Hash > r)
+                    {
+                        MessageBox.Show("Error: Hash is greater than R.");
+                        return;
+                    }
                     
                     // decimal representation of hash
                     tbHashDecimal.Text = BI_Hash.ToString();
@@ -216,6 +227,12 @@ namespace Digital_Signature
                     RSA Rsa = new RSA(eps, r);
                     checkedHash = Rsa.DecryptHash(BI_Hash).ToByteArray();
 
+                    if (new BigInteger(realHash) > RSA.R)
+                    {
+                        MessageBox.Show("Error: Hash is greater than R.");
+                        return;
+                    }
+
                     // output encrypted hash from file
                     tbCheckedHash.Text = new BigInteger(checkedHash).ToString();
 
@@ -274,10 +291,6 @@ namespace Digital_Signature
             {
                 MessageBox.Show("Error: P and Q couldn't be the same.");
             }
-            else if (p * q < MIN)
-            {
-                MessageBox.Show("Error: Value of p and q must be greater than 100000000000000000000");
-            }
             else if (eps >= p * q)
             {
                 MessageBox.Show("Error: Eps must be less than P * Q.");
@@ -315,10 +328,6 @@ namespace Digital_Signature
             else if (eps >= r)
             {
                 MessageBox.Show("Error: E must be less than R.");
-            }
-            else if (r < 1000000000000) 
-            {
-                MessageBox.Show("Error: Value of r must be greater than 100000000000000000000");
             }
             else
             {

@@ -73,6 +73,12 @@ namespace Digital_Signature
                 {
                     E += EulersFuncOfR;
                 }
+
+                if (GCD(E, EulersFuncOfR) != 1)
+                {
+                    MessageBox.Show("Error: Greatest common divisor of E and euler function of R must be equal 1.");
+                    return 0;
+                }
             }
 
             return ModPower(hash, D, R); // c = (m^d) mod r
