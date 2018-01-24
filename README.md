@@ -3,7 +3,7 @@
 The program calculates and verifies the electronic digital signature based on the RSA algorithm.
 SHA-1 is used to calculate the hash function.
 
-##SHA-1
+## SHA-1
 
 SHA-1 (Secure Hash Algorithm 1) is a cryptographic hash function which takes an input and produces
 a 160-bit (20-byte) hash value. SHA-1 is used to verify that a file has been unaltered. This is done by
@@ -11,7 +11,7 @@ producing a checksum before the file has been transmitted, and then again once i
 The transmitted file can be considered genuine only if both checksums are identical. Even a small change
 in the message will, with overwhelming probability, result in many bits changing due to the avalanche effect. 
 
-##RSA algorithm
+## RSA algorithm
 
 In RSA, signing a message is equal to encrypting the hash of the message with your private key.
 Due to the specific properties of RSA, this allows anyone to decrypt the signature if they have the
@@ -49,21 +49,23 @@ The recipient verifies the authenticity of the document M using the sender's pub
 After what calculate a hash of the received document and compare it with H(M).
 If the values are equal, the document is authentic.
 
-##Usage
+## Usage
 
-######1. How to sign file
+###### 1. How to sign file
 
 Click "Browse..." and select the file. The program can process files of small size (up to several megabytes)
 of various types (text files, pictures, etc.). To sign the file, enter the private keys (P, Q and D (or E)) 
 and click the button "Sign". In this case, a new text file containing a digital signature will be created
 in the folder with the source file.
 
-######2. How to verify file
+###### 2. How to verify file
 
 Select the source file and the file, that contains digital signature. Enter the public keys (E and R) and click 
 the button "Verify". The program will display a message whether the file is authentic.
 
-##Contact
+![alt text](Digital-Signature/Digital Signature/Digital Signature/screen.JPG "Digital signature")
+
+## Contact
 
 Karolina Dubitskaya
 KarolinaDubitskaya@gmail.com
