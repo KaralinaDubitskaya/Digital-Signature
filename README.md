@@ -66,5 +66,5 @@ the button "Verify". The program will display a message whether the file is auth
 ![alt text](Digital-Signature/Digital Signature/Digital Signature/screen.JPG)
 
 ## Contact
-KarolinaDubitskaya                                                                                                                     
+Karolina Dubitskaya                                                                                                                     
 KarolinaDubitskaya@gmail.com
