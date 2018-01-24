@@ -236,7 +236,7 @@ namespace Digital_Signature
                     // output encrypted hash from file
                     tbCheckedHash.Text = new BigInteger(checkedHash).ToString();
 
-                    if (checkedHash.SequenceEqual(realHash))
+                    if (new BigInteger(checkedHash) == new BigInteger(realHash))
                     {
                         MessageBox.Show("Digital signature is correct. File is authentic.");
                     }
