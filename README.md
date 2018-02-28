@@ -63,8 +63,6 @@ in the folder with the source file.
 Select the source file and the file, that contains digital signature. Enter the public keys (E and R) and click 
 the button "Verify". The program will display a message whether the file is authentic.
 
-![alt text](Digital-Signature/Digital Signature/Digital Signature/screen.JPG)
-
 ## Contact
-Karolina Dubitskaya                                                                                                                     
-KarolinaDubitskaya@gmail.com
+Karalina Dubitskaya
+karalinadubitskaya@gmail.com
